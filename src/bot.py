@@ -48,6 +48,17 @@ async def ping(ctx):
     """
     await ctx.send(f'pong! {round(bot.latency * 1000)}ms')
 
+
+@bot.command()
+@commands.is_owner()
+async def reload(ctx):
+    """
+    Reload all cogs
+    """
+    unregister_cogs()
+    register_cogs()
+    await ctx.send('Reloaded all cogs')
+
 if __name__ == "__main__":
     token = os.environ.get('DISCORD_TOKEN')
     bot.run(token)

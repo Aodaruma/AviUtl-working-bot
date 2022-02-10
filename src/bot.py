@@ -15,7 +15,10 @@ def register_cogs():
     """
     for filename in os.listdir('./src/cogs'):
         if filename.endswith('.py'):
-            bot.load_extension(f'src.cogs.{filename[:-3]}')
+            try:
+                bot.load_extension(f'cogs.{filename[:-3]}')
+            except discord.ExtensionAlreadyLoaded as e:
+                pass
 
 
 if __name__ == "__main__":

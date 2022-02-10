@@ -162,3 +162,8 @@ class AutoQuestionThread(AutoConvertThread):
         await m.delete()
 
 
+def setup(bot: commands.Bot):
+    """
+    Setup the cog
+    """
+    bot.add_cog(AutoQuestionThread(bot))

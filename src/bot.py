@@ -1,5 +1,6 @@
 import os
 import json
+import dotenv
 import discord
 from discord.ext import commands, tasks
 
@@ -61,5 +62,6 @@ async def reload(ctx):
     await ctx.send('Reloaded all cogs')
 
 if __name__ == "__main__":
+    dotenv.load_dotenv("src/.env")
     token = os.environ.get('DISCORD_TOKEN')
     bot.run(token)

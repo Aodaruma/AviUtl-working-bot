@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands, tasks
 from discord import ui, ButtonStyle, Embed
@@ -77,20 +78,87 @@ class SelectQuestionCategory(ui.View):
             self.stop()
 
 
+# ------------------------------------------------------------------------------
+
+
+class AutoConvertThread(commands.Cog):
+    channel_id = None
+
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
         """
-          Listen for messages in the channel
+        Listen for messages in the channel
         """
         if message.channel.id == self.channel_id:
-            await self.bot.make_thread_from_message(message)
+            if message.author != self.bot.user or message.is_system():
+                if not message.content.startswith("¥"):
+                    await self.make_thread_from_message(message)
 
     async def make_thread_from_message(self, message: discord.Message):
         """
-          Create a thread from a message
+        Create a thread from a message
         """
-        await message.reply(f"質問ありがとうございます!\nこの質問のカテゴリを教えてください:")
-        await self.
+        raise NotImplementedError
 
-        await c.create_thread(recipient=message.author, content=f"Question: {m}")
+
+class AutoQuestionThread(AutoConvertThread):
+    # channel_id = 419507067406254081 # 本番
+    channel_id = 941175111845822506  # 実験用
+    # channel_id = 941023971263004722 # デバッグ用
+
+    async def make_thread_from_message(self, message: discord.Message):
+        title = "自動スレッド化"
+        delete_time = 30
+
+        e = Embed(
+            title=title,
+            description="質問有難うございます! この質問のカテゴリーを教えてください",
+        )
+        v = SelectQuestionCategory(message.author)
+        m = await message.reply(embed=e, view=v)
+        await v.wait()
+
+        sc = v.selected_category
+        if sc is None:
+            await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000))
+            await asyncio.sleep(delete_time)
+            await message.delete()
+            await m.delete()
+            return
+
+        # Create a thread
+        msc = categories[sc]
+        c = message.channel
+
+        tm = await c.send(embed=Embed(
+            title=f"【{msc}】についての質問",
+            description=f"{message.author.mention}さんからの質問です。\n",
+            url=""
+        ))
+        t = await tm.create_thread(
+            name=f"【{msc}】{message.content}"
+        )
+        await t.add_user(message.author)
+        e = Embed(
+            title=f"{msc} - {message.author.display_name} さんから",
+            description=message.content,
+            url=""
+        )
+        e.set_author(name=message.author.display_name,
+                     icon_url=message.author.display_avatar.url)
+        # e.set_footer(text="問題が解決しましたら、下のボタンを押してください")
+        await t.send(content=f"{message.author.mention} スレッドを作成しました! 以降はこのスレッドで質問をお願いします。", embed=e)
+
+        await m.edit(
+            embed=Embed(
+                title=title, description=f"スレッドを作成しました! 以降はこのスレッドで質問をお願いします。\nなお、このスレッドと質問文は{delete_time}秒後に削除されます。",
+                color=0x00FF00
+            ), view=discord.ui.View())
+        await asyncio.sleep(delete_time)
+        await message.delete()
+        await m.delete()
+
+

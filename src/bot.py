@@ -32,6 +32,7 @@ def unregister_cogs():
             except discord.ExtensionNotLoaded as e:
                 pass
 
+
 @bot.event
 async def on_ready():
     """

@@ -40,6 +40,14 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     register_cogs()
 
+
+@bot.command()
+async def ping(ctx):
+    """
+    Ping
+    """
+    await ctx.send(f'pong! {round(bot.latency * 1000)}ms')
+
 if __name__ == "__main__":
     token = os.environ.get('DISCORD_TOKEN')
     bot.run(token)

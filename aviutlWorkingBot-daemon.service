@@ -1,0 +1,16 @@
+[Unit]
+Description=A daemon service of running an AviUtl working bot, which runs on Discord.
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RuntimeMaxSec=86400
+EnvironmentFile=/home/ubuntu/AviUtl-working-bot/src/.env
+WorkingDirectory=/home/ubuntu/AviUtl-working-bot/
+ExecStart=/home/ubuntu/.pyenv/shims/pipenv run python src/bot.py
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target

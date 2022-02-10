@@ -31,6 +31,15 @@ def unregister_cogs():
                 bot.unload_extension(f'cogs.{filename[:-3]}')
             except discord.ExtensionNotLoaded as e:
                 pass
+
+@bot.event
+async def on_ready():
+    """
+    When the bot is ready
+    """
+    print(f'Logged in as {bot.user}')
+    register_cogs()
+
 if __name__ == "__main__":
     token = os.environ.get('DISCORD_TOKEN')
     bot.run(token)

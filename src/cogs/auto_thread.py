@@ -14,6 +14,13 @@ categories = {
 }
 
 
+def setup(bot: commands.Bot):
+    """
+    Setup the cog
+    """
+    bot.add_cog(AutoQuestionThread(bot))
+
+
 class SelectQuestionCategory(ui.View):
 
     def __init__(self, user):
@@ -160,10 +167,3 @@ class AutoQuestionThread(AutoConvertThread):
         await asyncio.sleep(delete_time)
         await message.delete()
         await m.delete()
-
-
-def setup(bot: commands.Bot):
-    """
-    Setup the cog
-    """
-    bot.add_cog(AutoQuestionThread(bot))

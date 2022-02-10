@@ -21,6 +21,16 @@ def register_cogs():
                 pass
 
 
+def unregister_cogs():
+    """
+    Unregister all cogs in the cogs folder
+    """
+    for filename in os.listdir('./src/cogs'):
+        if filename.endswith('.py'):
+            try:
+                bot.unload_extension(f'cogs.{filename[:-3]}')
+            except discord.ExtensionNotLoaded as e:
+                pass
 if __name__ == "__main__":
     token = os.environ.get('DISCORD_TOKEN')
     bot.run(token)

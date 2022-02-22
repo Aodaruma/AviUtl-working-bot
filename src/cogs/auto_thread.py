@@ -112,8 +112,8 @@ class AutoConvertThread(commands.Cog):
 
 
 class AutoQuestionThread(AutoConvertThread):
-    # channel_id = 419507067406254081 # 本番
-    channel_id = 941175111845822506  # 実験用
+    channel_id = 419507067406254081 # 本番
+    # channel_id = 941175111845822506  # 実験用
     # channel_id = 941023971263004722 # デバッグ用
 
     async def make_thread_from_message(self, message: discord.Message):

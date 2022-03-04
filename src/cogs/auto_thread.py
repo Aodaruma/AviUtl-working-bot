@@ -99,6 +99,8 @@ class AutoConvertThread(commands.Cog):
         """
         Listen for messages in the channel
         """
+        if self.channel_id == None:
+            raise NotImplementedError
         if message.channel.id == self.channel_id:
             if message.author != self.bot.user or message.is_system():
                 if not message.content.startswith("¥"):
@@ -120,6 +122,7 @@ class AutoQuestionThread(AutoConvertThread):
         title = "自動スレッド化"
         delete_time = 30
 
+        # Ask the user to select a category
         e = Embed(
             title=title,
             description="質問有難うございます! この質問のカテゴリーを教えてください",
@@ -129,16 +132,17 @@ class AutoQuestionThread(AutoConvertThread):
         await v.wait()
 
         sc = v.selected_category
-        if sc is None:
+        if sc is None:  # Cancelled
             await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000))
             await asyncio.sleep(delete_time)
             await message.delete()
             await m.delete()
             return
 
-        # Create a thread
         msc = categories[sc]
         c = message.channel
+        attachments = message.attachments
+        files = [await f.to_file() for f in attachments] if attachments else []
 
         tm = await c.send(embed=Embed(
             title=f"【{msc}】についての質問",
@@ -156,9 +160,22 @@ class AutoQuestionThread(AutoConvertThread):
         )
         e.set_author(name=message.author.display_name,
                      icon_url=message.author.display_avatar.url)
-        # e.set_footer(text="問題が解決しましたら、下のボタンを押してください")
+
         await t.send(content=f"{message.author.mention} スレッドを作成しました! 以降はこのスレッドで質問をお願いします。", embed=e)
 
+        for f in files:
+            e = Embed(
+                title="",
+                description=f"{msc} - {message.author.display_name} さんから",
+                url=""
+            )
+            e.set_image(url=f"attachment://{f.filename}")
+            e.set_author(name=message.author.display_name,
+                         icon_url=message.author.display_avatar.url)
+            await t.send(file=f, embed=e)
+        # e.set_footer(text="問題が解決しましたら、下のボタンを押してください")
+
+        # Notify the author that the thread was created successfully
         await m.edit(
             embed=Embed(
                 title=title, description=f"スレッドを作成しました! 以降はこのスレッドで質問をお願いします。\nなお、このスレッドと質問文は{delete_time}秒後に削除されます。",

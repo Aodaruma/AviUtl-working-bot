@@ -73,7 +73,7 @@ class SelectQuestionCategory(ui.View):
         Set the selected category to Others
         """
         if interaction.user == self.user:
-            self.selected_category = "others"
+            self.selected_category = "other"
             self.stop()
 
     @ui.button(label="キャンセル", style=ButtonStyle.red)

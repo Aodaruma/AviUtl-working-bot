@@ -193,5 +193,9 @@ class AutoQuestionThread(AutoConvertThread):
                 color=0x00FF00
             ), view=discord.ui.View())
         await asyncio.sleep(delete_time)
-        await message.delete()
         await m.delete()
+        try:
+            await message.delete()
+        except discord.NotFound as e:
+            pass
+        return

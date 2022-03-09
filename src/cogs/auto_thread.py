@@ -128,7 +128,16 @@ class AutoQuestionThread(AutoConvertThread):
         )
         v = SelectQuestionCategory(message.author)
         m = await message.reply(embed=e, view=v)
-        await v.wait()
+        timeouted = await v.wait()
+        if timeouted:
+            await m.edit(embed=Embed(title=title, description=f"タイムアウトしたため、質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000), view=None)
+            await asyncio.sleep(delete_time)
+            await m.delete()
+            try:
+                await message.delete()
+            except discord.NotFound as e:
+                pass
+            return
 
         sc = v.selected_category
         if sc is None:  # Cancelled

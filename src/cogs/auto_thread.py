@@ -102,9 +102,8 @@ class AutoConvertThread(commands.Cog):
         if self.channel_id == None:
             raise NotImplementedError
         if message.channel.id == self.channel_id:
-            if message.author != self.bot.user or message.is_system():
-                if not message.content.startswith("¥"):
-                    await self.make_thread_from_message(message)
+            if message.author != self.bot.user and not message.is_system():
+                await self.make_thread_from_message(message)
 
     async def make_thread_from_message(self, message: discord.Message):
         """

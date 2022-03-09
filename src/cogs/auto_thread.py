@@ -189,7 +189,7 @@ class AutoQuestionThread(AutoConvertThread):
         # Notify the author that the thread was created successfully
         await m.edit(
             embed=Embed(
-                title=title, description=f"スレッドを作成しました! 以降はこのスレッドで質問をお願いします。\nなお、このスレッドと質問文は{delete_time}秒後に削除されます。",
+                title=title, description=f"スレッドを作成しました! 以降はこのスレッドで質問をお願いします。\nなお、このメッセージと質問文は{delete_time}秒後に削除されます。",
                 color=0x00FF00
             ), view=discord.ui.View())
         await asyncio.sleep(delete_time)

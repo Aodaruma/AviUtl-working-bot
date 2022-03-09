@@ -143,8 +143,11 @@ class AutoQuestionThread(AutoConvertThread):
         if sc is None:  # Cancelled
             await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000))
             await asyncio.sleep(delete_time)
-            await message.delete()
             await m.delete()
+            try:
+                await message.delete()
+            except discord.NotFound as e:
+                pass
             return
 
         msc = categories[sc]

@@ -27,7 +27,7 @@ class SelectQuestionCategory(ui.View):
         """
         Initialize
         """
-        super().__init__()
+        super().__init__(timeout=60)
         self.selected_category = None
         self.user = user
 

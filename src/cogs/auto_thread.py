@@ -141,7 +141,7 @@ class AutoQuestionThread(AutoConvertThread):
 
         sc = v.selected_category
         if sc is None:  # Cancelled
-            await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000))
+            await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000), view=None)
             await asyncio.sleep(delete_time)
             await m.delete()
             try:

@@ -113,7 +113,7 @@ class AutoConvertThread(commands.Cog):
 
 
 class AutoQuestionThread(AutoConvertThread):
-    channel_id = 419507067406254081 # 本番
+    channel_id = 419507067406254081  # 本番
     # channel_id = 941175111845822506  # 実験用
     # channel_id = 941023971263004722 # デバッグ用
 
@@ -133,22 +133,22 @@ class AutoQuestionThread(AutoConvertThread):
             await m.edit(embed=Embed(title=title, description=f"タイムアウトしたため、質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000), view=None)
             await asyncio.sleep(delete_time)
             await m.delete()
-            try:
-                await message.delete()
-            except discord.NotFound as e:
-                pass
-            return
+            # try:
+            #     await message.delete()
+            # except discord.NotFound as e:
+            #     pass
+            # return
 
         sc = v.selected_category
         if sc is None:  # Cancelled
             await m.edit(embed=Embed(title=title, description=f"質問のスレッド化をキャンセルしました。なお、このメッセージと質問文は{delete_time}秒後に削除されます。", color=0xFF0000), view=None)
             await asyncio.sleep(delete_time)
             await m.delete()
-            try:
-                await message.delete()
-            except discord.NotFound as e:
-                pass
-            return
+            # try:
+            #     await message.delete()
+            # except discord.NotFound as e:
+            #     pass
+            # return
 
         msc = categories[sc]
         c = message.channel
@@ -194,8 +194,8 @@ class AutoQuestionThread(AutoConvertThread):
             ), view=discord.ui.View())
         await asyncio.sleep(delete_time)
         await m.delete()
-        try:
-            await message.delete()
-        except discord.NotFound as e:
-            pass
-        return
+        # try:
+        #     await message.delete()
+        # except discord.NotFound as e:
+        #     pass
+        # return

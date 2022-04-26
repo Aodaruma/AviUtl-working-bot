@@ -160,9 +160,14 @@ class AutoQuestionThread(AutoConvertThread):
             description=f"{message.author.mention}さんからの質問です。\n",
             url=""
         ))
-        t = await tm.create_thread(
-            name=f"【{msc}】{message.content}"
-        )
+        if len(message.content) < 30:
+            t = await tm.create_thread(
+                name=f"【{msc}】{message.content}"
+            )
+        else:
+            t = await tm.create_thread(
+                name=f"【{msc}】{message.content[:30]}..."
+            )
         await t.add_user(message.author)
         e = Embed(
             title=f"{msc} - {message.author.display_name} さんから",
